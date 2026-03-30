@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>LŌU · Brew Calibration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700;800;900&family=Inconsolata:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{background:#191919;overflow-x:hidden}
+  @keyframes pulse{0%,100%{opacity:.3}50%{opacity:.8}}
+  input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  input[type="number"]{-moz-appearance:textfield}
+  ::-webkit-scrollbar{width:0}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const{useState,useEffect,useCallback}=React;
+const B={negro:"#191919",beige:"#E2DED5",gris:"#939DA5",olivo:"#383A31",rojo:"#DF3B3A",beigeDark:"#C9C4B9",negroLight:"#2A2A2A",olivoLight:"#4A4C42",beigeLight:"#EDE9E1",olivoMid:"#515345"};
+const LOGO="data:image/png;base64,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";
+const EMB="data:image/png;base64,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";
+
+
+const ROAST_TYPES=["Claro","Medio-Claro","Medio","Medio-Oscuro","Oscuro"];
+const PROCESSES=["Lavado","Natural","Honey","Anaeróbico","Doble Fermentación","Otro"];
+const FLAVOR_TAGS={
+  negative:["Agrio","Amargo","Astringente","Seco","Vegetal","Quemado","Ceniza","Salado","Plano","Acuoso"],
+  positive:["Dulce","Frutal","Floral","Chocolate","Caramelo","Nuez","Cítrico","Cremoso","Balanceado","Limpio"]
+};
+const uid=()=>Math.random().toString(36).slice(2,10);
+const daysSince=d=>Math.floor((Date.now()-new Date(d).getTime())/86400000);
+const fmt=n=>(typeof n==="number"?Math.round(n*100)/100:n);
+const SK="lou-beans-v3";
+
+function getSuggestions(shot, bean){
+  const sg=[];const neg=shot.flavors?.negative||[];const pos=shot.flavors?.positive||[];
+  const hasAcid=neg.includes("Agrio")||neg.includes("Vegetal");
+  const hasBitter=neg.includes("Amargo")||neg.includes("Quemado")||neg.includes("Ceniza");
+  const hasDry=neg.includes("Seco")||neg.includes("Astringente");
+  const hasFlat=neg.includes("Plano")||neg.includes("Acuoso");
+  const hasBoth=hasAcid&&hasBitter;
+
+  /* --- COMPARE WITH PREVIOUS SHOT --- */
+  const shots=bean?.shots||[];
+  const idx=shots.findIndex(s=>s.id===shot.id);
+  const prev=idx>0?shots[idx-1]:(shots.length>1?shots[shots.length-2]:null);
+
+  if(prev){
+    const changes=[];
+    const dDoseIn=shot.doseIn-prev.doseIn;
+    const dDoseOut=shot.doseOut-prev.doseOut;
+    const dTemp=shot.temp-prev.temp;
+    const dTime=shot.time-prev.time;
+    const dGrind=(shot.grindSetting||0)-(prev.grindSetting||0);
+    const dPI=(shot.preInfusion||0)-(prev.preInfusion||0);
+    const dRatio=(shot.doseOut/shot.doseIn)-(prev.doseOut/prev.doseIn);
+
+    if(Math.abs(dDoseIn)>=0.5) changes.push({param:"dosis de entrada",delta:dDoseIn,unit:"g",abs:Math.abs(dDoseIn)/0.5,dir:dDoseIn>0?"subiste":"bajaste",val:`${prev.doseIn}g → ${shot.doseIn}g`});
+    if(Math.abs(dDoseOut)>=1) changes.push({param:"yield (salida)",delta:dDoseOut,unit:"g",abs:Math.abs(dDoseOut)/1,dir:dDoseOut>0?"subiste":"bajaste",val:`${prev.doseOut}g → ${shot.doseOut}g`});
+    if(Math.abs(dTemp)>=0.5) changes.push({param:"temperatura",delta:dTemp,unit:"°C",abs:Math.abs(dTemp)/0.5,dir:dTemp>0?"subiste":"bajaste",val:`${prev.temp}°C → ${shot.temp}°C`});
+    if(Math.abs(dTime)>=2) changes.push({param:"tiempo de extracción",delta:dTime,unit:"s",abs:Math.abs(dTime)/2,dir:dTime>0?"subió":"bajó",val:`${prev.time}s → ${shot.time}s`});
+    if(Math.abs(dGrind)>=0.2) changes.push({param:"molienda (Mythos)",delta:dGrind,unit:"",abs:Math.abs(dGrind)/0.2,dir:dGrind>0?"abriste (más grueso)":"cerraste (más fino)",val:`${prev.grindSetting||0} → ${shot.grindSetting||0}`});
+    if(Math.abs(dPI)>=1) changes.push({param:"preinfusión",delta:dPI,unit:"s",abs:Math.abs(dPI)/1,dir:dPI>0?"aumentaste":"redujiste",val:`${prev.preInfusion||0}s → ${shot.preInfusion||0}s`});
+
+    changes.sort((a,b)=>b.abs-a.abs);
+
+    if(changes.length>0){
+      const top=changes[0];
+      sg.push({icon:"🔄",text:`Cambio principal vs shot anterior: ${top.dir} ${top.param} (${top.val}).`,detail:true});
+
+      if(top.param==="dosis de entrada"){
+        if(top.delta>0&&hasAcid) sg.push({icon:"⚠️",text:`Subir la dosis de ${prev.doseIn}g a ${shot.doseIn}g (+${fmt(top.delta)}g) sin ajustar molienda aumenta la resistencia del puck. El agua no logra extraer uniformemente → acidez. Abre molienda para compensar el aumento de dosis, o vuelve a ${prev.doseIn}g y ajusta otra variable.`});
+        else if(top.delta>0&&hasBitter) sg.push({icon:"⚠️",text:`Más dosis (${prev.doseIn}g → ${shot.doseIn}g) con la misma molienda genera un puck más denso. Si el tiempo subió mucho, estás sobreextrayendo. Abre molienda proporcionalmente o reduce la dosis.`});
+        else if(top.delta>0&&hasBoth) sg.push({icon:"⚠️",text:`El salto de ${prev.doseIn}g a ${shot.doseIn}g es significativo. Un puck mucho más denso con la misma molienda genera canalización: acidez y amargor al mismo tiempo. Vuelve a la dosis anterior o recalibra molienda desde cero.`});
+        else if(top.delta<0&&hasFlat) sg.push({icon:"💡",text:`Reducir la dosis de ${prev.doseIn}g a ${shot.doseIn}g puede generar un shot acuoso si el yield se mantuvo igual. El ratio subió a 1:${fmt(shot.doseOut/shot.doseIn)}. Baja el yield proporcionalmente o sube la dosis.`});
+        else if(top.delta>0) sg.push({icon:"📝",text:`Subiste la dosis ${fmt(top.delta)}g. Recuerda que cambios mayores a 1g en dosis requieren recalibrar molienda — no es solo más café, es un puck completamente diferente.`});
+        else sg.push({icon:"📝",text:`Bajaste la dosis ${fmt(Math.abs(top.delta))}g. Ajusta yield y molienda proporcionalmente para mantener el perfil.`});
+      }
+      else if(top.param==="temperatura"){
+        if(top.delta>0&&hasBitter) sg.push({icon:"🌡️",text:`Subir de ${prev.temp}°C a ${shot.temp}°C probablemente empujó a sobreextracción. Regresa a ${prev.temp}°C o baja 0.5°C desde ahí. La temperatura es la variable más agresiva — mueve de medio grado en medio grado.`});
+        else if(top.delta<0&&hasAcid) sg.push({icon:"🌡️",text:`Bajar de ${prev.temp}°C a ${shot.temp}°C redujo la capacidad de extracción. El café no desarrolla bien sus azúcares a esta temperatura. Sube de vuelta a ${prev.temp}°C.`});
+        else if(top.delta>0&&hasAcid) sg.push({icon:"🌡️",text:`Subiste temp pero sigue ácido. El problema probablemente no es temperatura sino molienda o distribución. Revisa puck prep antes de seguir subiendo — a ${shot.temp}°C ya deberías tener suficiente extracción.`});
+        else sg.push({icon:"📝",text:`Ajuste de temperatura (${top.val}). Si mejoró, documenta. Si no, revisa si el cambio significativo no es otro parámetro que también moviste.`});
+      }
+      else if(top.param==="molienda (Mythos)"){
+        if(top.delta<0&&hasBitter) sg.push({icon:"⚙️",text:`Cerraste molienda (${top.val}) y apareció amargor. El puck está demasiado fino — el agua sobreextrae. Regresa al punto anterior (${prev.grindSetting}) o abre un poco más (+0.2).`});
+        else if(top.delta>0&&hasAcid) sg.push({icon:"⚙️",text:`Abriste molienda (${top.val}) y apareció acidez. Fuiste demasiado lejos — el agua pasa rápido sin extraer bien. Cierra ligeramente (-0.2 desde ${shot.grindSetting}).`});
+        else sg.push({icon:"📝",text:`Ajuste de molienda (${top.val}). El Mythos es sensible — cambios de 0.2-0.3 son suficientes para notar diferencia.`});
+      }
+      else if(top.param==="preinfusión"){
+        sg.push({icon:"💧",text:`Cambiaste preinfusión (${top.val}). La preinfusión mejora uniformidad de extracción pero no compensa problemas de dosis, molienda o temperatura. Si cambiaste otros parámetros al mismo tiempo, enfócate primero en esos.`});
+      }
+      else if(top.param==="yield (salida)"){
+        if(top.delta>0&&hasBitter) sg.push({icon:"📐",text:`Más yield (${top.val}) puede sobreextraer al final del shot. Los últimos mililitros traen compuestos amargos. Reduce a ${prev.doseOut}g o busca el punto medio.`});
+        else if(top.delta<0&&hasAcid) sg.push({icon:"📐",text:`Menos yield (${top.val}) = menos extracción total. Los azúcares no se disolvieron completamente. Sube de vuelta a ${prev.doseOut}g.`});
+        else sg.push({icon:"📝",text:`Ajuste de yield (${top.val}). Ratio actual: 1:${fmt(shot.doseOut/shot.doseIn)}.`});
+      }
+
+      if(changes.length>1){
+        const others=changes.slice(1).map(c=>`${c.param} (${c.val})`).join(", ");
+        sg.push({icon:"📋",text:`También cambiaste: ${others}. Para aislar qué causó el resultado, cambia solo una variable a la vez.`});
+      }
+    }
+  }
+
+  /* --- GENERIC FLAVOR-BASED (when no previous shot or no changes) --- */
+  if(sg.length===0){
+    if(hasBoth){
+      sg.push({icon:"⚠️",text:"Acidez + amargor simultáneos = extracción despareja (canalización). El agua encuentra caminos fáciles en el puck: unas zonas se sobreextraen (amargor) mientras otras quedan subextraídas (acidez agria)."});
+      sg.push({icon:"🔧",text:"Revisa tu puck prep: distribución con WDT, tamp nivelado con spring tamper. Si ya lo haces, alarga preinfusión a 4-5s con 3-4s de pausa para saturar el puck antes de la presión completa."});
+    }else if(hasAcid){
+      sg.push({icon:"🌡️",text:`Subextracción: el agua no está sacando suficientes solubles. Los azúcares quedan en el puck y la taza muestra solo ácidos sin contrapeso.`});
+      if(shot.temp<93) sg.push({icon:"🔥",text:`Temperatura: sube 1°C (a ${shot.temp+1}°C). Es el ajuste con mayor impacto. Más temperatura = más energía para disolver azúcares.`});
+      if(shot.time<28) sg.push({icon:"⚙️",text:`Tiempo muy corto (${shot.time}s). Aprieta molienda en el Mythos (-0.3 a -0.5) para llegar a 28-32s.`});
+      if(shot.doseOut/shot.doseIn<1.9) sg.push({icon:"📐",text:`Ratio bajo (1:${fmt(shot.doseOut/shot.doseIn)}). Sube yield a ~${fmt(shot.doseIn*2)}g para ratio 1:2.`});
+    }else if(hasBitter||hasDry){
+      sg.push({icon:"🌡️",text:`Sobreextracción: estás sacando compuestos indeseables del café. ${hasDry?"La astringencia/sequedad indica que los taninos se están disolviendo.":"El amargor viene de compuestos que se extraen al final."}`});
+      if(shot.temp>92) sg.push({icon:"❄️",text:`Baja temperatura 1°C (a ${shot.temp-1}°C). Menos energía = menos extracción de compuestos amargos.`});
+      if(shot.time>32) sg.push({icon:"⚙️",text:`Tiempo largo (${shot.time}s). Abre molienda en el Mythos (+0.3) para bajar a 28-32s.`});
+    }else if(hasFlat){
+      sg.push({icon:"💧",text:"Shot plano/acuoso: falta cuerpo y carácter. El café tiene los solubles pero están muy diluidos o la extracción no llegó a los compuestos de sabor."});
+      sg.push({icon:"⚙️",text:`Aprieta molienda ligeramente (Mythos: -0.2 a -0.3). También puedes reducir yield 1-2g para concentrar.`});
+    }
+    if(pos.includes("Balanceado")&&pos.includes("Dulce")){
+      sg.push({icon:"✅",text:`¡Receta lograda! Documenta: ${shot.doseIn}g → ${shot.doseOut}g, ${shot.temp}°C, ${shot.time}s${shot.grindSetting?", M:"+shot.grindSetting:""}${shot.preInfusion?", PI:"+shot.preInfusion+"/"+shot.preInfusionPause+"s":""}. Replica exactamente en los siguientes shots.`});
+    }
+    if(sg.length===0) sg.push({icon:"📝",text:"Sin problemas claros detectados. Si buscas mejorar, cambia una sola variable a la vez y compara con este shot como referencia."});
+  }
+
+  return sg;
+}
+
+function genReport(bean){
+  const shots=bean.shots||[];if(!shots.length)return null;
+  const avg=k=>shots.reduce((a,sh)=>a+(sh[k]||0),0)/shots.length;
+  const best=shots.reduce((b,sh)=>(sh.rating||0)>(b.rating||0)?sh:b,shots[0]);
+  const freq=type=>{const f={};shots.flatMap(sh=>sh.flavors?.[type]||[]).forEach(n=>f[n]=(f[n]||0)+1);return Object.entries(f).sort((a,b)=>b[1]-a[1]).slice(0,5);};
+  return{avgTemp:avg("temp"),avgDoseIn:avg("doseIn"),avgDoseOut:avg("doseOut"),avgTime:avg("time"),avgRating:avg("rating"),avgGrind:avg("grindSetting"),bestShot:best,topNeg:freq("negative"),topPos:freq("positive"),totalShots:shots.length};
+}
+
+const st={
+  app:{fontFamily:"'Inconsolata',monospace",background:B.negro,color:B.beige,minHeight:"100vh",maxWidth:480,margin:"0 auto",position:"relative",overflow:"hidden"},
+  header:{padding:"14px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:`1px solid ${B.olivo}`,background:B.negro,position:"sticky",top:0,zIndex:10},
+  body:{padding:"0 20px 100px"},
+  card:{background:B.negroLight,borderRadius:12,padding:"16px 18px",marginBottom:12,border:`1px solid ${B.olivo}`,cursor:"pointer"},
+  label:{fontSize:10,color:B.gris,textTransform:"uppercase",letterSpacing:2,marginBottom:6,display:"block",fontFamily:"'Oswald',sans-serif",fontWeight:800},
+  input:{width:"100%",background:B.olivo,border:`1px solid ${B.olivoLight}`,borderRadius:8,padding:"12px 14px",color:B.beige,fontSize:15,fontFamily:"'Inconsolata',monospace",outline:"none",boxSizing:"border-box"},
+  btn:{background:B.rojo,color:"#fff",border:"none",borderRadius:10,padding:"14px 24px",fontSize:13,fontFamily:"'Oswald',sans-serif",fontWeight:800,letterSpacing:3,textTransform:"uppercase",cursor:"pointer",width:"100%"},
+  btnO:{background:"transparent",color:B.beige,border:`1px solid ${B.gris}`,borderRadius:10,padding:"12px 20px",fontSize:12,fontFamily:"'Inconsolata',monospace",cursor:"pointer",letterSpacing:1,textTransform:"uppercase"},
+  btnS:{background:B.olivo,color:B.beige,border:"none",borderRadius:20,padding:"8px 16px",fontSize:12,fontFamily:"'Inconsolata',monospace",cursor:"pointer"},
+  tag:{display:"inline-block",padding:"6px 12px",borderRadius:20,fontSize:11,margin:"3px",cursor:"pointer",fontFamily:"'Inconsolata',monospace",border:"1px solid"},
+  tagNeg:{background:"transparent",borderColor:B.rojo,color:B.rojo},tagNegA:{background:B.rojo,borderColor:B.rojo,color:"#fff"},
+  tagPos:{background:"transparent",borderColor:"#5DCAA5",color:"#5DCAA5"},tagPosA:{background:"#1D9E75",borderColor:"#1D9E75",color:"#fff"},
+  metric:{textAlign:"center",padding:"12px 4px",background:B.negroLight,borderRadius:10},
+  mVal:{fontSize:20,fontWeight:800,fontFamily:"'Oswald',sans-serif",color:B.beige},
+  mLab:{fontSize:9,color:B.gris,textTransform:"uppercase",letterSpacing:1,marginTop:4,fontFamily:"'Oswald',sans-serif"},
+  nav:{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:480,background:B.negro,borderTop:`1px solid ${B.olivo}`,display:"flex",justifyContent:"space-around",padding:"10px 0 22px",zIndex:20},
+  navItem:{display:"flex",flexDirection:"column",alignItems:"center",gap:4,cursor:"pointer",background:"none",border:"none",padding:0},
+  navLab:{fontSize:9,textTransform:"uppercase",letterSpacing:1.5,fontFamily:"'Oswald',sans-serif",fontWeight:800},
+  sug:{display:"flex",gap:12,alignItems:"flex-start",padding:"12px 0",borderBottom:`1px solid ${B.olivo}`},
+  empty:{textAlign:"center",padding:"50px 20px",color:B.gris},
+  divider:{height:1,background:B.olivo,margin:"20px 0"},
+  row:{display:"flex",gap:12},col:{flex:1},
+  mon:{fontFamily:"'Oswald',sans-serif",fontWeight:800,letterSpacing:2,textTransform:"uppercase"},
+};
+
+const persist=beans=>{try{localStorage.setItem(SK,JSON.stringify(beans))}catch{}try{window.storage?.set(SK,JSON.stringify(beans))}catch{}};
+const loadData=()=>{try{const d=JSON.parse(localStorage.getItem(SK));if(d)return d}catch{}return[]};
+
+const Ic=({name,sz=20,c=B.beige})=>{
+  const p={width:sz,height:sz,viewBox:"0 0 24 24",fill:"none",stroke:c,strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round"};
+  const i={
+    plus:<svg {...p}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>,
+    back:<svg {...p}><polyline points="15 18 9 12 15 6"/></svg>,
+    report:<svg {...p}><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg>,
+    archive:<svg {...p}><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 002 2h12a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>,
+    share:<svg {...p}><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>,
+    trash:<svg {...p}><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>,
+    grinder:<svg {...p}><rect x="7" y="10" width="10" height="12" rx="1"/><path d="M9 10V7a3 3 0 016 0v3"/><circle cx="12" cy="16" r="2"/><line x1="12" y1="2" x2="12" y2="4"/></svg>,
+    edit:<svg {...p}><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
+  };
+  return i[name]||null;
+};
+
+const Hdr=({title,sub,onBack,right})=>(
+  <div style={st.header}>
+    {onBack?<button onClick={onBack} style={{background:"none",border:"none",cursor:"pointer",padding:0}}><Ic name="back"/></button>:<img src={LOGO} alt="LOU" style={{height:28}}/>}
+    <div style={{textAlign:"center",flex:1}}>
+      <div style={{...st.mon,fontSize:16}}>{title}</div>
+      {sub&&<div style={{fontSize:10,color:B.gris,letterSpacing:1.5,marginTop:2}}>{sub}</div>}
+    </div>
+    {right||<div style={{width:24}}/>}
+  </div>
+);
+
+const Pill=({active,color,children,onClick})=>{
+  const base=color==="red"?(active?st.tagNegA:st.tagNeg):(active?st.tagPosA:st.tagPos);
+  return <span onClick={onClick} style={{...st.tag,...base}}>{children}</span>;
+};
+
+/* HALF-STAR RATING: supports 0.5 increments */
+const Stars=({value,onChange,sz=26})=>{
+  const handleClick=(starN,e)=>{
+    if(!onChange)return;
+    const rect=e.currentTarget.getBoundingClientRect();
+    const x=e.clientX-rect.left;
+    const half=x<rect.width/2;
+    onChange(half?starN-0.5:starN);
+  };
+  const renderStar=(n)=>{
+    const full=value>=n;
+    const halfStar=!full&&value>=n-0.5;
+    if(full)return <span key={n} onClick={e=>handleClick(n,e)} style={{fontSize:sz,cursor:onChange?"pointer":"default",color:"#EF9F27",userSelect:"none"}}>★</span>;
+    if(halfStar)return <span key={n} onClick={e=>handleClick(n,e)} style={{fontSize:sz,cursor:onChange?"pointer":"default",position:"relative",userSelect:"none",color:B.olivo}}>★<span style={{position:"absolute",left:0,top:0,width:"50%",overflow:"hidden",color:"#EF9F27"}}>★</span></span>;
+    return <span key={n} onClick={e=>handleClick(n,e)} style={{fontSize:sz,cursor:onChange?"pointer":"default",color:B.olivo,userSelect:"none"}}>★</span>;
+  };
+  return <div style={{display:"flex",gap:4,justifyContent:"center",margin:"8px 0"}}>{[1,2,3,4,5].map(renderStar)}</div>;
+};
+
+const fmtRating=v=>v%1===0?`${v}`:`${v}`;
+
+function App(){
+  const[beans,setBeans]=useState([]);
+  const[screen,setScreen]=useState("home");
+  const[selBean,setSelBean]=useState(null);
+  const[selShot,setSelShot]=useState(null);
+  const[loaded,setLoaded]=useState(false);
+  useEffect(()=>{let cancelled=false;(async()=>{try{if(window.storage){const r=await window.storage.get(SK);if(!cancelled&&r&&r.value){setBeans(JSON.parse(r.value));setLoaded(true);return;}}}catch(e){}if(!cancelled){setBeans(loadData());setLoaded(true);}})();return()=>{cancelled=true};},[]);
+  const save=useCallback(nb=>{setBeans(nb);persist(nb);},[]);
+  const nav=(scr,bean)=>{setScreen(scr);if(bean)setSelBean(bean);};
+  const addBean=b=>{const nb=[...beans,{...b,id:uid(),shots:[],status:"active",createdAt:new Date().toISOString()}];save(nb);setScreen("home");};
+  const addShot=(bid,shot)=>{const nb=beans.map(b=>b.id===bid?{...b,shots:[...b.shots,{...shot,id:uid(),timestamp:new Date().toISOString()}]}:b);save(nb);setSelBean(nb.find(b=>b.id===bid));setSelShot(shot);setScreen("shotResult");};
+  const closeBean=bid=>{const nb=beans.map(b=>b.id===bid?{...b,status:"closed"}:b);save(nb);setSelBean(nb.find(b=>b.id===bid));setScreen("report");};
+  const deleteBean=bid=>{save(beans.filter(b=>b.id!==bid));setScreen("home");setSelBean(null);};
+  const[editShot,setEditShot]=useState(null);
+  const deleteShot=(bid,sid)=>{const nb=beans.map(b=>b.id===bid?{...b,shots:b.shots.filter(sh=>sh.id!==sid)}:b);save(nb);setSelBean(nb.find(b=>b.id===bid));};
+  const updateShot=(bid,updated)=>{const nb=beans.map(b=>b.id===bid?{...b,shots:b.shots.map(sh=>sh.id===updated.id?{...updated,timestamp:sh.timestamp}:sh)}:b);save(nb);setSelBean(nb.find(b=>b.id===bid));setEditShot(null);setScreen("beanDetail");};
+  const startEdit=(bean,shot)=>{setSelBean(bean);setEditShot(shot);setScreen("editShot");};
+  if(!loaded)return<div style={{...st.app,display:"flex",alignItems:"center",justifyContent:"center"}}><img src={EMB} alt="" style={{width:48,opacity:.3,animation:"pulse 1.5s infinite"}}/></div>;
+  return(
+    <div style={st.app}>
+      {screen==="home"&&<Home beans={beans} nav={nav}/>}
+      {screen==="addBean"&&<AddBean onSave={addBean} onBack={()=>setScreen("home")}/>}
+      {screen==="beanDetail"&&selBean&&<BeanDetail bean={selBean} nav={nav} onClose={closeBean} onDelete={deleteBean} onDeleteShot={deleteShot} onEdit={sh=>startEdit(selBean,sh)}/>}
+      {screen==="logShot"&&selBean&&<LogShot bean={selBean} onSave={sh=>addShot(selBean.id,sh)} onBack={()=>nav("beanDetail",selBean)}/>}
+      {screen==="editShot"&&selBean&&editShot&&<LogShot bean={selBean} editShot={editShot} onSave={sh=>updateShot(selBean.id,sh)} onBack={()=>{setEditShot(null);nav("beanDetail",selBean);}}/>}
+      {screen==="shotResult"&&selBean&&selShot&&<ShotResult bean={selBean} shot={selShot} onBack={()=>nav("beanDetail",selBean)}/>}
+      {screen==="report"&&selBean&&<Report bean={selBean} onBack={()=>nav("beanDetail",selBean)}/>}
+      {screen==="archive"&&<Archive beans={beans} nav={nav}/>}
+      <nav style={st.nav}>
+        <button style={st.navItem} onClick={()=>setScreen("home")}><img src={EMB} alt="" style={{height:22,opacity:screen==="home"?1:.4,filter:screen==="home"?"none":"grayscale(1)"}}/><span style={{...st.navLab,color:screen==="home"?B.rojo:B.gris}}>Granos</span></button>
+        <button style={st.navItem} onClick={()=>setScreen("addBean")}><div style={{background:B.rojo,borderRadius:"50%",width:46,height:46,display:"flex",alignItems:"center",justifyContent:"center",marginTop:-16}}><Ic name="plus" sz={22} c="#fff"/></div></button>
+        <button style={st.navItem} onClick={()=>setScreen("archive")}><Ic name="archive" sz={22} c={screen==="archive"?B.rojo:B.gris}/><span style={{...st.navLab,color:screen==="archive"?B.rojo:B.gris}}>Archivo</span></button>
+      </nav>
+    </div>
+  );
+}
+
+function Home({beans,nav}){
+  const active=beans.filter(b=>b.status==="active");
+  return(<>
+    <Hdr title="LOU" sub="Brew Calibration"/>
+    <div style={st.body}>
+      <div style={{padding:"16px 0 10px"}}><span style={{...st.label,fontSize:11}}>Granos activos ({active.length})</span></div>
+      {!active.length?<div style={st.empty}><img src={EMB} alt="" style={{width:48,opacity:.2}}/><p style={{marginTop:16,fontSize:13}}>No hay granos activos</p><p style={{fontSize:11,color:B.gris}}>Agrega un grano para calibrar</p></div>
+      :active.map(b=>(
+        <div key={b.id} style={st.card} onClick={()=>nav("beanDetail",b)}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+            <div><div style={{...st.mon,fontSize:15}}>{b.customName||b.variety}</div>
+            {b.customName&&b.variety&&<div style={{fontSize:11,color:B.beigeDark,marginTop:2}}>{b.variety}</div>}
+            <div style={{fontSize:11,color:B.gris,marginTop:3}}>{b.producer&&`${b.producer} · `}{b.roastType} · {b.process}</div></div>
+            <div style={{background:B.olivo,borderRadius:6,padding:"4px 10px",fontSize:10,color:B.beige,...st.mon,letterSpacing:1}}>{b.shots.length}</div>
+          </div>
+          <div style={{display:"flex",gap:14,marginTop:10,fontSize:11,color:B.gris}}>
+            <span>{daysSince(b.roastDate)}d reposo</span>
+            {b.shots.length>0&&(()=>{const ls=b.shots[b.shots.length-1];return<span>{ls.doseIn}×{ls.doseOut}g·{ls.temp}°C·{ls.time}s{ls.grindSetting?` M:${ls.grindSetting}`:""}</span>;})()}
+          </div>
+          {b.shots.length>0&&<div style={{display:"flex",gap:4,flexWrap:"wrap",marginTop:8}}>
+            {(b.shots[b.shots.length-1].flavors?.positive||[]).slice(0,3).map(f=><span key={f} style={{...st.tag,...st.tagPos,fontSize:9,padding:"2px 8px",margin:0}}>{f}</span>)}
+            {(b.shots[b.shots.length-1].flavors?.negative||[]).slice(0,2).map(f=><span key={f} style={{...st.tag,...st.tagNeg,fontSize:9,padding:"2px 8px",margin:0}}>{f}</span>)}
+          </div>}
+        </div>
+      ))}
+    </div>
+  </>);
+}
+
+function Archive({beans,nav}){
+  const closed=beans.filter(b=>b.status==="closed");
+  return(<><Hdr title="Archivo"/><div style={st.body}>
+    {!closed.length?<div style={st.empty}><Ic name="archive" sz={40} c={B.olivo}/><p style={{marginTop:14,fontSize:13}}>No hay lotes cerrados</p></div>
+    :closed.map(b=>(<div key={b.id} style={st.card} onClick={()=>nav("beanDetail",b)}><div style={{...st.mon,fontSize:14}}>{b.customName||b.variety}</div><div style={{fontSize:11,color:B.gris,marginTop:4}}>{b.producer&&`${b.producer} · `}{b.roastType}·{b.process}·{b.shots.length} shots</div></div>))}
+  </div></>);
+}
+
+/* FIXED: No inline component defs — all inputs inline to prevent focus loss */
+function AddBean({onSave,onBack}){
+  const[f,setF]=useState({variety:"",customName:"",producer:"",roastType:"Medio",roastDate:new Date().toISOString().split("T")[0],process:"Lavado"});
+  const set=(k,v)=>setF(prev=>({...prev,[k]:v}));
+  const valid=f.variety.trim().length>0;
+  return(<>
+    <Hdr title="Nuevo Grano" onBack={onBack}/>
+    <div style={st.body}>
+      <div style={{paddingTop:14}}><label style={st.label}>Variedad / Origen</label><input style={st.input} value={f.variety} onChange={e=>set("variety",e.target.value)} placeholder="Ej: Colombia Gesha, Ethiopia Sidamo..."/></div>
+      <div style={{paddingTop:14}}><label style={st.label}>Nombre personalizado (opcional)</label><input style={st.input} value={f.customName} onChange={e=>set("customName",e.target.value)} placeholder="Ej: El Frutal, Lote 23..."/></div>
+      <div style={{paddingTop:14}}><label style={st.label}>Productor / Tostador</label><input style={st.input} value={f.producer} onChange={e=>set("producer",e.target.value)} placeholder="Ej: Buna, Café Avellaneda..."/></div>
+      <div style={{paddingTop:14}}><label style={st.label}>Tipo de tueste</label><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{ROAST_TYPES.map(o=><button key={o} onClick={()=>set("roastType",o)} style={{...st.btnS,background:f.roastType===o?B.rojo:B.olivo,color:f.roastType===o?"#fff":B.beige,fontSize:12}}>{o}</button>)}</div></div>
+      <div style={{paddingTop:14}}><label style={st.label}>Fecha de tueste</label><input type="date" style={{...st.input,colorScheme:"dark"}} value={f.roastDate} onChange={e=>set("roastDate",e.target.value)}/></div>
+      <div style={{paddingTop:14}}><label style={st.label}>Proceso</label><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{PROCESSES.map(o=><button key={o} onClick={()=>set("process",o)} style={{...st.btnS,background:f.process===o?B.rojo:B.olivo,color:f.process===o?"#fff":B.beige,fontSize:12}}>{o}</button>)}</div></div>
+      <div style={{paddingTop:28}}><button style={{...st.btn,opacity:valid?1:.4}} disabled={!valid} onClick={()=>valid&&onSave(f)}>Agregar Grano</button></div>
+    </div>
+  </>);
+}
+
+function BeanDetail({bean,nav,onClose,onDelete,onDeleteShot,onEdit}){
+  const[delId,setDelId]=useState(null);const report=genReport(bean);const closed=bean.status==="closed";
+  const right=bean.shots.length>0?<button onClick={()=>nav("report",bean)} style={{background:"none",border:"none",cursor:"pointer",padding:0}}><Ic name="report"/></button>:<div style={{width:24}}/>;
+  return(<>
+    <Hdr title={bean.customName||bean.variety} sub={bean.producer||bean.variety} onBack={()=>nav("home")} right={right}/>
+    <div style={st.body}>
+      <div style={{...st.card,background:B.olivo,borderColor:"transparent",marginTop:14}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div><div style={{fontSize:12,color:B.beigeDark}}>{bean.roastType}·{bean.process}</div>{bean.producer&&<div style={{fontSize:11,color:B.gris,marginTop:2}}>{bean.producer}</div>}<div style={{fontSize:11,color:B.gris,marginTop:2}}>Tueste: {new Date(bean.roastDate).toLocaleDateString("es-MX",{day:"numeric",month:"short",year:"numeric"})}</div></div>
+          <div style={{textAlign:"right"}}><div style={{...st.mVal,fontSize:28}}>{daysSince(bean.roastDate)}</div><div style={st.mLab}>días reposo</div></div>
+        </div>
+      </div>
+      {report&&<div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:6,marginTop:10}}>
+        {[{v:`${fmt(report.avgTemp)}°`,l:"Temp"},{v:`${fmt(report.avgDoseIn)}g`,l:"In"},{v:`${fmt(report.avgDoseOut)}g`,l:"Out"},{v:`${fmt(report.avgTime)}s`,l:"Time"},{v:report.avgGrind?fmt(report.avgGrind):"—",l:"Grind"}].map(m=>(<div key={m.l} style={st.metric}><div style={{...st.mVal,fontSize:16}}>{m.v}</div><div style={st.mLab}>{m.l}</div></div>))}
+      </div>}
+      {!closed&&<button style={{...st.btn,marginTop:18}} onClick={()=>nav("logShot",bean)}>+ Registrar Shot</button>}
+      <div style={st.divider}/><span style={{...st.label,fontSize:11}}>Historial ({bean.shots.length})</span>
+      {!bean.shots.length?<div style={{...st.empty,padding:"24px"}}><p style={{fontSize:12}}>Sin shots</p></div>
+      :[...bean.shots].reverse().map((sh,i)=>(
+        <div key={sh.id} style={st.card}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+            <div style={{fontSize:10,color:B.gris}}>#{bean.shots.length-i}·{new Date(sh.timestamp).toLocaleDateString("es-MX",{day:"numeric",month:"short"})} {new Date(sh.timestamp).toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit"})}</div>
+            <div style={{display:"flex",gap:6,alignItems:"center"}}>
+              {sh.rating&&<span style={{color:"#EF9F27",fontSize:12}}>{"★".repeat(Math.floor(sh.rating))}{sh.rating%1?'½':''}</span>}
+              {!closed&&(delId===sh.id?<div style={{display:"flex",gap:4}}><button onClick={()=>{onDeleteShot(bean.id,sh.id);setDelId(null);}} style={{...st.btnS,background:B.rojo,fontSize:9,padding:"3px 8px"}}>Sí</button><button onClick={()=>setDelId(null)} style={{...st.btnS,fontSize:9,padding:"3px 8px"}}>No</button></div>:<><button onClick={()=>onEdit(sh)} style={{background:"none",border:"none",cursor:"pointer",padding:2}}><Ic name="edit" sz={13} c={B.gris}/></button><button onClick={()=>setDelId(sh.id)} style={{background:"none",border:"none",cursor:"pointer",padding:2}}><Ic name="trash" sz={13} c={B.gris}/></button></>)}
+            </div>
+          </div>
+          <div style={{display:"flex",gap:12,marginTop:8,fontSize:12,flexWrap:"wrap"}}>
+            <span>{sh.doseIn}×{sh.doseOut}g</span><span>{sh.temp}°C</span><span>{sh.time}s</span>
+            {sh.grindSetting>0&&<span style={{color:B.beigeDark}}>⚙ {sh.grindSetting}</span>}
+            {sh.preInfusion>0&&<span>PI:{sh.preInfusion}/{sh.preInfusionPause}s</span>}
+          </div>
+          {(sh.flavors?.positive?.length||sh.flavors?.negative?.length)?<div style={{display:"flex",gap:3,flexWrap:"wrap",marginTop:6}}>
+            {(sh.flavors.positive||[]).map(fl=><span key={fl} style={{...st.tag,...st.tagPos,fontSize:9,padding:"2px 7px",margin:0}}>{fl}</span>)}
+            {(sh.flavors.negative||[]).map(fl=><span key={fl} style={{...st.tag,...st.tagNeg,fontSize:9,padding:"2px 7px",margin:0}}>{fl}</span>)}
+          </div>:null}
+        </div>
+      ))}
+      <div style={st.divider}/>
+      <div style={{display:"flex",gap:10}}>
+        {!closed&&bean.shots.length>0&&<button style={{...st.btnO,flex:1}} onClick={()=>onClose(bean.id)}>Cerrar Lote</button>}
+        <button style={{...st.btnO,flex:1,borderColor:B.rojo,color:B.rojo}} onClick={()=>{if(window.confirm("¿Eliminar grano?"))onDelete(bean.id);}}>Eliminar</button>
+      </div>
+      <div style={{height:30}}/>
+    </div>
+  </>);
+}
+
+/* FIXED: functional setState prevents stale closure — inputs keep focus */
+function LogShot({bean,onSave,onBack,editShot}){
+  const isEdit=!!editShot;
+  const[step,setStep]=useState(1);
+  const lastShot=editShot||(bean.shots.length?bean.shots[bean.shots.length-1]:null);
+  const[f,setF]=useState({doseIn:lastShot?.doseIn||17,doseOut:lastShot?.doseOut||35,temp:lastShot?.temp||93,time:lastShot?.time||30,preInfusion:lastShot?.preInfusion||0,preInfusionPause:lastShot?.preInfusionPause||0,grindSetting:lastShot?.grindSetting||0,notes:lastShot?.notes||"",rating:lastShot?.rating||3,flavors:{negative:lastShot?.flavors?.negative||[],positive:lastShot?.flavors?.positive||[]},...(isEdit?{id:editShot.id}:{})});
+  const set=(k,v)=>setF(prev=>({...prev,[k]:v}));
+  const toggleF=(t,fl)=>setF(prev=>{const arr=prev.flavors[t];return{...prev,flavors:{...prev.flavors,[t]:arr.includes(fl)?arr.filter(x=>x!==fl):[...arr,fl]}};});
+  const ratio=f.doseIn>0?fmt(f.doseOut/f.doseIn):"—";
+  return(<>
+    <Hdr title={isEdit?"Editar Shot":"Shot"} sub={`${bean.customName||bean.variety}·${step}/3`} onBack={step===1?onBack:()=>setStep(step-1)}/>
+    <div style={st.body}>
+      {step===1&&<div style={{paddingTop:16}}>
+        <div style={{textAlign:"center",marginBottom:20}}><span style={{...st.label,fontSize:10}}>Parámetros de extracción</span></div>
+        <div style={st.row}><div style={st.col}><label style={st.label}>Entrada (g)</label><input type="number" step="0.1" style={st.input} value={f.doseIn} onChange={e=>set("doseIn",parseFloat(e.target.value)||0)}/></div><div style={st.col}><label style={st.label}>Salida (g)</label><input type="number" step="0.1" style={st.input} value={f.doseOut} onChange={e=>set("doseOut",parseFloat(e.target.value)||0)}/></div></div>
+        <div style={{textAlign:"center",margin:"6px 0",color:B.gris,fontSize:11}}>Ratio 1:{ratio}</div>
+        <div style={{...st.row,marginTop:12}}><div style={st.col}><label style={st.label}>Temp (°C)</label><input type="number" step="0.5" style={st.input} value={f.temp} onChange={e=>set("temp",parseFloat(e.target.value)||0)}/></div><div style={st.col}><label style={st.label}>Tiempo (s)</label><input type="number" style={st.input} value={f.time} onChange={e=>set("time",parseInt(e.target.value)||0)}/></div></div>
+        <div style={{marginTop:12}}><label style={{...st.label,color:B.beigeDark}}><span style={{display:"flex",alignItems:"center",gap:6}}><Ic name="grinder" sz={14} c={B.beigeDark}/> Mythos 1 — Molienda</span></label><input type="number" step="0.1" min="0" max="10" style={st.input} value={f.grindSetting} onChange={e=>set("grindSetting",parseFloat(e.target.value)||0)} placeholder="Ej: 3.5"/><div style={{fontSize:10,color:B.gris,marginTop:4}}>Dial micrométrico (0=fino, 10=grueso)</div></div>
+        <div style={{...st.row,marginTop:12}}><div style={st.col}><label style={st.label}>Pre-infusión (s)</label><input type="number" style={st.input} value={f.preInfusion} onChange={e=>set("preInfusion",parseInt(e.target.value)||0)}/></div><div style={st.col}><label style={st.label}>Pausa (s)</label><input type="number" style={st.input} value={f.preInfusionPause} onChange={e=>set("preInfusionPause",parseInt(e.target.value)||0)}/></div></div>
+        <button style={{...st.btn,marginTop:26}} onClick={()=>setStep(2)}>Siguiente</button>
+      </div>}
+      {step===2&&<div style={{paddingTop:16}}>
+        <div style={{textAlign:"center",marginBottom:20}}><span style={{...st.label,fontSize:10}}>Evaluación sensorial</span></div>
+        <label style={{...st.label,color:B.rojo}}>Notas negativas</label>
+        <div style={{display:"flex",flexWrap:"wrap",marginBottom:16}}>{FLAVOR_TAGS.negative.map(fl=><Pill key={fl} active={f.flavors.negative.includes(fl)} color="red" onClick={()=>toggleF("negative",fl)}>{fl}</Pill>)}</div>
+        <label style={{...st.label,color:"#5DCAA5"}}>Notas positivas</label>
+        <div style={{display:"flex",flexWrap:"wrap",marginBottom:16}}>{FLAVOR_TAGS.positive.map(fl=><Pill key={fl} active={f.flavors.positive.includes(fl)} color="green" onClick={()=>toggleF("positive",fl)}>{fl}</Pill>)}</div>
+        <label style={st.label}>Calificación</label>
+        <Stars value={f.rating} onChange={v=>set("rating",v)}/>
+        <div style={{textAlign:"center",fontSize:13,color:B.gris,marginTop:4}}>{f.rating} / 5</div>
+        <button style={{...st.btn,marginTop:20}} onClick={()=>setStep(3)}>Siguiente</button>
+      </div>}
+      {step===3&&<div style={{paddingTop:16}}>
+        <div style={{textAlign:"center",marginBottom:20}}><span style={{...st.label,fontSize:10}}>Resumen</span></div>
+        <div style={{...st.card,background:B.olivo,borderColor:"transparent"}}>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10}}>
+            {[{l:"Entrada",v:`${f.doseIn}g`},{l:"Salida",v:`${f.doseOut}g`},{l:"Ratio",v:`1:${ratio}`},{l:"Temp",v:`${f.temp}°C`},{l:"Tiempo",v:`${f.time}s`},{l:"Molienda",v:f.grindSetting>0?`${f.grindSetting}`:"—"}].map(m=>(<div key={m.l}><span style={{fontSize:10,color:B.gris}}>{m.l}</span><div style={{fontSize:15,fontWeight:600}}>{m.v}</div></div>))}
+            {f.preInfusion>0&&<div><span style={{fontSize:10,color:B.gris}}>Pre-infusión</span><div style={{fontSize:15,fontWeight:600}}>{f.preInfusion}s/{f.preInfusionPause}s</div></div>}
+          </div>
+        </div>
+        <div style={{display:"flex",gap:4,flexWrap:"wrap",marginTop:10}}>
+          {f.flavors.positive.map(fl=><span key={fl} style={{...st.tag,...st.tagPosA,fontSize:10}}>{fl}</span>)}
+          {f.flavors.negative.map(fl=><span key={fl} style={{...st.tag,...st.tagNegA,fontSize:10}}>{fl}</span>)}
+        </div>
+        <Stars value={f.rating}/>
+        <div style={{textAlign:"center",fontSize:13,color:B.gris}}>{f.rating}/5</div>
+        <label style={st.label}>Notas</label>
+        <textarea style={{...st.input,minHeight:60,resize:"vertical"}} value={f.notes} onChange={e=>set("notes",e.target.value)} placeholder="Cambios, observaciones..."/>
+        <button style={{...st.btn,marginTop:20}} onClick={()=>onSave(f)}>{isEdit?"Actualizar Shot":"Guardar Shot"}</button>
+      </div>}
+    </div>
+  </>);
+}
+
+function ShotResult({bean,shot,onBack}){
+  const suggestions=getSuggestions(shot,bean);
+  return(<><Hdr title="Calibración" onBack={onBack}/><div style={st.body}>
+    <div style={{paddingTop:16,textAlign:"center"}}><img src={EMB} alt="" style={{width:32,opacity:.5}}/><div style={{...st.mon,fontSize:14,marginTop:8}}>Shot registrado</div><div style={{fontSize:14,marginTop:6}}>{shot.doseIn}g×{shot.doseOut}g·{shot.temp}°C·{shot.time}s{shot.grindSetting>0?` M:${shot.grindSetting}`:""}</div></div>
+    <div style={st.divider}/><span style={{...st.label,fontSize:11,color:B.rojo}}>Sugerencias</span>
+    <div style={{marginTop:6}}>{suggestions.map((sg,i)=>(<div key={i} style={{...st.sug,flexDirection:sg.detail?"column":"row"}}>{sg.detail?<div style={{fontSize:13,fontWeight:600,color:B.beige,padding:"4px 0",borderLeft:`3px solid ${B.rojo}`,paddingLeft:12}}>{sg.text}</div>:<><span style={{fontSize:18,flexShrink:0}}>{sg.icon}</span><span style={{fontSize:13,lineHeight:1.6}}>{sg.text}</span></>}</div>))}</div>
+    <button style={{...st.btn,marginTop:24}} onClick={onBack}>Volver al Grano</button>
+  </div></>);
+}
+
+function Report({bean,onBack}){
+  const report=genReport(bean);if(!report)return null;
+  const shareReport=()=>{
+    const{jsPDF}=window.jspdf;const doc=new jsPDF({unit:"mm",format:"a4"});
+    const W=210,H=297,M=20,CW=W-2*M;
+    const negro=[25,25,25],beige=[226,222,213],rojo=[223,59,58],olivo=[56,58,49],gris=[147,157,165];
+    const hex=(c)=>({r:c[0],g:c[1],b:c[2]});
+    let y=0;
+    /* header bar */
+    doc.setFillColor(...negro);doc.rect(0,0,W,52,"F");
+    doc.setFontSize(28);doc.setTextColor(...beige);doc.setFont("helvetica","bold");
+    doc.text("LOU",M,28);
+    doc.setFontSize(9);doc.setTextColor(...gris);doc.setFont("helvetica","normal");
+    doc.text("BREW BAR · CALIBRACION",M,36);
+    doc.setFontSize(18);doc.setTextColor(...beige);doc.setFont("helvetica","bold");
+    doc.text("REPORTE DE LOTE",W-M,28,{align:"right"});
+    doc.setFontSize(8);doc.setTextColor(...gris);doc.setFont("helvetica","normal");
+    doc.text(new Date().toLocaleDateString("es-MX",{day:"numeric",month:"long",year:"numeric"}).toUpperCase(),W-M,36,{align:"right"});
+    /* red accent line */
+    doc.setFillColor(...rojo);doc.rect(0,52,W,2,"F");
+    y=64;
+    /* bean info section */
+    doc.setFontSize(16);doc.setTextColor(...negro);doc.setFont("helvetica","bold");
+    doc.text((bean.customName||bean.variety).toUpperCase(),M,y);y+=7;
+    if(bean.customName&&bean.variety){doc.setFontSize(10);doc.setTextColor(...gris);doc.setFont("helvetica","normal");doc.text(bean.variety,M,y);y+=5;}
+    if(bean.producer){doc.setFontSize(10);doc.setTextColor(...gris);doc.text("Productor: "+bean.producer,M,y);y+=5;}
+    y+=3;
+    /* info grid */
+    doc.setFillColor(245,243,238);doc.roundedRect(M,y,CW,22,3,3,"F");
+    const infoY=y+8;const colW=CW/4;
+    const infoItems=[{l:"TUESTE",v:bean.roastType},{l:"PROCESO",v:bean.process},{l:"FECHA TUESTE",v:new Date(bean.roastDate).toLocaleDateString("es-MX")},{l:"TOTAL SHOTS",v:String(report.totalShots)}];
+    infoItems.forEach((it,i)=>{const x=M+4+i*colW;doc.setFontSize(6);doc.setTextColor(...gris);doc.setFont("helvetica","normal");doc.text(it.l,x,infoY);doc.setFontSize(10);doc.setTextColor(...negro);doc.setFont("helvetica","bold");doc.text(it.v,x,infoY+6);});
+    y+=30;
+    /* separator */
+    doc.setDrawColor(...rojo);doc.setLineWidth(0.5);doc.line(M,y,W-M,y);y+=8;
+    /* PROMEDIOS */
+    doc.setFontSize(8);doc.setTextColor(...rojo);doc.setFont("helvetica","bold");doc.text("PROMEDIOS",M,y);y+=7;
+    doc.setFillColor(...negro);doc.roundedRect(M,y,CW,20,3,3,"F");
+    const avgY=y+8;const avgW=CW/6;
+    const avgItems=[{l:"TEMP",v:fmt(report.avgTemp)+"°C"},{l:"ENTRADA",v:fmt(report.avgDoseIn)+"g"},{l:"SALIDA",v:fmt(report.avgDoseOut)+"g"},{l:"RATIO",v:"1:"+fmt(report.avgDoseOut/report.avgDoseIn)},{l:"TIEMPO",v:fmt(report.avgTime)+"s"},{l:"MOLIENDA",v:report.avgGrind?String(fmt(report.avgGrind)):"—"}];
+    avgItems.forEach((it,i)=>{const x=M+4+i*avgW;doc.setFontSize(5);doc.setTextColor(...gris);doc.setFont("helvetica","normal");doc.text(it.l,x,avgY);doc.setFontSize(11);doc.setTextColor(...beige);doc.setFont("helvetica","bold");doc.text(it.v,x,avgY+7);});
+    y+=28;
+    /* MEJOR SHOT */
+    const bs=report.bestShot;
+    if(bs){doc.setFontSize(8);doc.setTextColor(239,159,39);doc.setFont("helvetica","bold");doc.text("MEJOR SHOT",M,y);y+=6;
+    doc.setDrawColor(239,159,39);doc.setLineWidth(0.3);doc.roundedRect(M,y,CW,16,3,3,"S");
+    doc.setFontSize(11);doc.setTextColor(...negro);doc.setFont("helvetica","bold");
+    let shotTxt=`${bs.doseIn}g x ${bs.doseOut}g  ·  ${bs.temp}°C  ·  ${bs.time}s`;
+    if(bs.grindSetting)shotTxt+=`  ·  M:${bs.grindSetting}`;if(bs.preInfusion)shotTxt+=`  ·  PI:${bs.preInfusion}/${bs.preInfusionPause}s`;
+    doc.text(shotTxt,M+4,y+7);
+    doc.setFontSize(10);doc.setTextColor(239,159,39);
+    const stars="★".repeat(Math.floor(bs.rating||0))+(bs.rating%1?"½":"")+" "+(bs.rating||0)+"/5";
+    doc.text(stars,M+4,y+13);
+    y+=24;}
+    /* NOTAS POSITIVAS */
+    if(report.topPos.length){doc.setFontSize(8);doc.setTextColor(29,158,117);doc.setFont("helvetica","bold");doc.text("NOTAS POSITIVAS FRECUENTES",M,y);y+=6;
+    report.topPos.forEach(([fl,c])=>{doc.setFillColor(29,158,117);doc.roundedRect(M,y-3,4,4,1,1,"F");doc.setFontSize(9);doc.setTextColor(...negro);doc.setFont("helvetica","normal");doc.text(`${fl}  (${c}x)`,M+7,y);y+=6;});y+=3;}
+    /* NOTAS NEGATIVAS */
+    if(report.topNeg.length){doc.setFontSize(8);doc.setTextColor(...rojo);doc.setFont("helvetica","bold");doc.text("NOTAS NEGATIVAS FRECUENTES",M,y);y+=6;
+    report.topNeg.forEach(([fl,c])=>{doc.setFillColor(...rojo);doc.roundedRect(M,y-3,4,4,1,1,"F");doc.setFontSize(9);doc.setTextColor(...negro);doc.setFont("helvetica","normal");doc.text(`${fl}  (${c}x)`,M+7,y);y+=6;});y+=3;}
+    /* PROGRESION */
+    if(bean.shots.length>1){
+      doc.setFontSize(8);doc.setTextColor(...gris);doc.setFont("helvetica","bold");doc.text("PROGRESION DE RATING",M,y);y+=6;
+      const chartW=CW,chartH=25,barW=Math.min(chartW/bean.shots.length-2,12);
+      doc.setFillColor(245,243,238);doc.roundedRect(M,y,chartW,chartH+8,3,3,"F");
+      bean.shots.forEach((sh,i)=>{
+        const bh=((sh.rating||1)/5)*chartH;const bx=M+4+i*((chartW-8)/bean.shots.length);const by=y+3+chartH-bh;
+        const col=(sh.rating||0)>=4?[29,158,117]:(sh.rating||0)>=3?[239,159,39]:rojo;
+        doc.setFillColor(...col);doc.roundedRect(bx,by,barW,bh,1,1,"F");
+        doc.setFontSize(5);doc.setTextColor(...gris);doc.text("#"+(i+1),bx+barW/2,y+chartH+7,{align:"center"});
+      });
+      y+=chartH+16;
+    }
+    /* RECOMENDACIONES PARA TOSTADOR */
+    doc.setDrawColor(...rojo);doc.setLineWidth(0.5);doc.line(M,y,W-M,y);y+=8;
+    doc.setFontSize(8);doc.setTextColor(...rojo);doc.setFont("helvetica","bold");doc.text("RECOMENDACIONES PARA TOSTADOR",M,y);y+=7;
+    doc.setFontSize(9);doc.setTextColor(...negro);doc.setFont("helvetica","normal");
+    if(report.topNeg.some(([fl])=>fl==="Agrio"||fl==="Vegetal")){doc.text("•  Considerar mayor desarrollo del tueste para reducir notas acidas/vegetales.",M,y);y+=6;}
+    if(report.topNeg.some(([fl])=>fl==="Amargo"||fl==="Quemado"||fl==="Ceniza")){doc.text("•  El grano podria beneficiarse de un tueste ligeramente mas claro.",M,y);y+=6;}
+    if(report.topPos.some(([fl])=>fl==="Balanceado"||fl==="Dulce")){doc.text("•  Perfil logrado: buen balance en taza. Mantener perfil de tueste.",M,y);y+=6;}
+    if(!report.topNeg.length&&!report.topPos.some(([fl])=>fl==="Balanceado")){doc.text("•  Ajuste fino: continuar calibracion para definir perfil optimo.",M,y);y+=6;}
+    /* HISTORIAL DE SHOTS */
+    y+=6;
+    if(y<H-60){
+      doc.setFontSize(8);doc.setTextColor(...gris);doc.setFont("helvetica","bold");doc.text("HISTORIAL COMPLETO",M,y);y+=5;
+      doc.setFontSize(6);doc.setTextColor(...gris);doc.setFont("helvetica","normal");
+      const hdr=["#","FECHA","IN","OUT","TEMP","TIME","GRIND","PI","RATING"];
+      const colWidths=[8,22,14,14,14,14,16,20,18];
+      let hx=M;hdr.forEach((h,i)=>{doc.text(h,hx,y);hx+=colWidths[i];});y+=4;
+      doc.setDrawColor(220,218,210);doc.line(M,y-1,W-M,y-1);
+      doc.setTextColor(...negro);
+      bean.shots.forEach((sh,i)=>{
+        if(y>H-15){doc.addPage();y=20;}
+        let hx2=M;
+        const vals=[String(i+1),new Date(sh.timestamp).toLocaleDateString("es-MX",{day:"2-digit",month:"2-digit"}),sh.doseIn+"g",sh.doseOut+"g",sh.temp+"°",sh.time+"s",sh.grindSetting?String(sh.grindSetting):"—",sh.preInfusion?sh.preInfusion+"/"+sh.preInfusionPause+"s":"—",String(sh.rating||"—")];
+        vals.forEach((v,vi)=>{doc.text(v,hx2,y);hx2+=colWidths[vi];});y+=4;
+      });
+    }
+    /* footer */
+    const lastPage=doc.internal.getNumberOfPages();
+    for(let p=1;p<=lastPage;p++){doc.setPage(p);doc.setFillColor(...olivo);doc.rect(0,H-10,W,10,"F");doc.setFontSize(7);doc.setTextColor(...beige);doc.setFont("helvetica","normal");doc.text("LOU BREW BAR  ·  Sombrerete 522, Col. Condesa, CDMX  ·  @loubrewbar",W/2,H-4,{align:"center"});}
+    /* save/share */
+    const fileName=`LOU_Reporte_${(bean.customName||bean.variety).replace(/\s+/g,"_")}_${new Date().toISOString().slice(0,10)}.pdf`;
+    const pdfBlob=doc.output("blob");
+    if(navigator.share&&navigator.canShare){
+      const file=new File([pdfBlob],fileName,{type:"application/pdf"});
+      if(navigator.canShare({files:[file]})){navigator.share({title:`Reporte: ${bean.customName||bean.variety}`,files:[file]});return;}
+    }
+    doc.save(fileName);
+  };
+  return(<>
+    <Hdr title="Reporte" onBack={onBack} right={<button onClick={shareReport} style={{background:"none",border:"none",cursor:"pointer",padding:0}}><Ic name="share"/></button>}/>
+    <div style={st.body}>
+      <div style={{textAlign:"center",paddingTop:20}}><img src={LOGO} alt="LOU" style={{height:32,opacity:.7}}/><div style={{...st.mon,fontSize:20,marginTop:10}}>Reporte de Lote</div><div style={{fontSize:11,color:B.gris,marginTop:4,letterSpacing:2}}>{bean.customName||bean.variety}</div>{bean.producer&&<div style={{fontSize:10,color:B.gris,marginTop:2}}>{bean.producer}</div>}</div>
+      <div style={{...st.card,background:B.olivo,borderColor:"transparent",marginTop:14}}>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+          <div><span style={{fontSize:10,color:B.gris}}>Tueste</span><div style={{fontSize:13,fontWeight:600}}>{bean.roastType}</div></div>
+          <div><span style={{fontSize:10,color:B.gris}}>Proceso</span><div style={{fontSize:13,fontWeight:600}}>{bean.process}</div></div>
+          <div><span style={{fontSize:10,color:B.gris}}>Fecha</span><div style={{fontSize:13,fontWeight:600}}>{new Date(bean.roastDate).toLocaleDateString("es-MX")}</div></div>
+          <div><span style={{fontSize:10,color:B.gris}}>Shots</span><div style={{fontSize:13,fontWeight:600}}>{report.totalShots}</div></div>
+        </div>
+      </div>
+      <div style={{marginTop:16}}><span style={{...st.label,fontSize:10}}>Promedios</span>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6,marginTop:6}}>
+          {[{v:`${fmt(report.avgTemp)}°`,l:"Temp"},{v:`${fmt(report.avgDoseIn)}g`,l:"In"},{v:`${fmt(report.avgDoseOut)}g`,l:"Out"},{v:`1:${fmt(report.avgDoseOut/report.avgDoseIn)}`,l:"Ratio"},{v:`${fmt(report.avgTime)}s`,l:"Time"},{v:report.avgGrind?fmt(report.avgGrind):"—",l:"Grind"}].map(m=>(<div key={m.l} style={st.metric}><div style={{...st.mVal,fontSize:16}}>{m.v}</div><div style={st.mLab}>{m.l}</div></div>))}
+        </div>
+      </div>
+      {report.bestShot&&<div style={{marginTop:16}}>
+        <span style={{...st.label,fontSize:10,color:"#EF9F27"}}>Mejor Shot</span>
+        <div style={{...st.card,borderColor:"#EF9F27",marginTop:6}}>
+          <div style={{fontSize:14,fontWeight:600}}>{report.bestShot.doseIn}g×{report.bestShot.doseOut}g·{report.bestShot.temp}°C·{report.bestShot.time}s{report.bestShot.grindSetting>0&&` M:${report.bestShot.grindSetting}`}{report.bestShot.preInfusion>0&&` PI:${report.bestShot.preInfusion}/${report.bestShot.preInfusionPause}s`}</div>
+          <Stars value={report.bestShot.rating||0} sz={18}/>
+          <div style={{textAlign:"center",fontSize:11,color:B.gris}}>{report.bestShot.rating}/5</div>
+        </div>
+      </div>}
+      <div style={{marginTop:16}}><span style={{...st.label,fontSize:10,color:"#5DCAA5"}}>Positivas frecuentes</span>
+        <div style={{display:"flex",flexWrap:"wrap",gap:4,marginTop:6}}>{!report.topPos.length?<span style={{fontSize:11,color:B.gris}}>—</span>:report.topPos.map(([f,c])=><span key={f} style={{...st.tag,...st.tagPosA,fontSize:11}}>{f}({c})</span>)}</div>
+      </div>
+      <div style={{marginTop:14}}><span style={{...st.label,fontSize:10,color:B.rojo}}>Negativas frecuentes</span>
+        <div style={{display:"flex",flexWrap:"wrap",gap:4,marginTop:6}}>{!report.topNeg.length?<span style={{fontSize:11,color:B.gris}}>—</span>:report.topNeg.map(([f,c])=><span key={f} style={{...st.tag,...st.tagNegA,fontSize:11}}>{f}({c})</span>)}</div>
+      </div>
+      <div style={{marginTop:20}}><span style={{...st.label,fontSize:10}}>Progresión</span>
+        <div style={{marginTop:6,height:70,display:"flex",alignItems:"flex-end",gap:3}}>
+          {bean.shots.map((sh,i)=>(<div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3}}><div style={{width:"100%",maxWidth:28,height:`${((sh.rating||1)/5)*50}px`,background:(sh.rating||0)>=4?"#1D9E75":(sh.rating||0)>=3?"#EF9F27":B.rojo,borderRadius:3}}/><span style={{fontSize:8,color:B.gris}}>#{i+1}</span></div>))}
+        </div>
+      </div>
+      <button onClick={shareReport} style={{...st.btn,marginTop:24,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}><Ic name="share" sz={16} c="#fff"/> Descargar PDF</button>
+      <div style={{height:30}}/>
+    </div>
+  </>);
+}
+
+ReactDOM.render(React.createElement(App),document.getElementById('root'));
+</script>
+</body>
+</html>
