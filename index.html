@@ -26,8 +26,8 @@
 <script type="text/babel">
 const{useState,useEffect,useCallback}=React;
 const B={negro:"#191919",beige:"#E2DED5",gris:"#939DA5",olivo:"#383A31",rojo:"#DF3B3A",beigeDark:"#C9C4B9",negroLight:"#2A2A2A",olivoLight:"#4A4C42",beigeLight:"#EDE9E1",olivoMid:"#515345"};
-const LOGO="data:image/png;base64,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";
-const EMB="data:image/png;base64,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";
+const LOGO="data:image/png;base64,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";
+const EMB="data:image/png;base64,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";
 
 
 const ROAST_TYPES=["Claro","Medio-Claro","Medio","Medio-Oscuro","Oscuro"];
@@ -42,98 +42,135 @@ const fmt=n=>(typeof n==="number"?Math.round(n*100)/100:n);
 const SK="lou-beans-v3";
 
 function getSuggestions(shot, bean){
-  const sg=[];const neg=shot.flavors?.negative||[];const pos=shot.flavors?.positive||[];
+  const sg=[];
+  const neg=shot.flavors?.negative||[];
+  const pos=shot.flavors?.positive||[];
+  const ratio=shot.doseIn>0?shot.doseOut/shot.doseIn:0;
   const hasAcid=neg.includes("Agrio")||neg.includes("Vegetal");
   const hasBitter=neg.includes("Amargo")||neg.includes("Quemado")||neg.includes("Ceniza");
   const hasDry=neg.includes("Seco")||neg.includes("Astringente");
   const hasFlat=neg.includes("Plano")||neg.includes("Acuoso");
   const hasBoth=hasAcid&&hasBitter;
+  const isGood=pos.includes("Balanceado")||pos.includes("Dulce");
 
-  /* --- COMPARE WITH PREVIOUS SHOT --- */
+  /* ============================================
+     SECTION 1: DIAGNÓSTICO (always, based on flavors)
+     ============================================ */
+  if(isGood&&!hasAcid&&!hasBitter&&!hasDry&&!hasFlat){
+    sg.push({type:"dx",icon:"✅",title:"Buen perfil",text:`Shot balanceado. Receta: ${shot.doseIn}g→${shot.doseOut}g, ${shot.temp}°C, ${shot.time}s${shot.grindSetting?`, M:${shot.grindSetting}`:""}${shot.preInfusion?`, PI:${shot.preInfusion}/${shot.preInfusionPause}s`:""}. Replica exactamente.`});
+  } else if(hasBoth){
+    sg.push({type:"dx",icon:"⚠️",title:"Canalización (extracción despareja)",text:"Acidez y amargor al mismo tiempo indican que el agua no pasa uniformemente por el puck. Unas zonas se sobreextraen (amargor) mientras otras quedan crudas (acidez agria)."});
+  } else if(hasAcid){
+    sg.push({type:"dx",icon:"🔵",title:"Subextracción",text:"Acidez agria"+(neg.includes("Vegetal")?" y notas vegetales indican":"indica")+" que el agua no extrajo suficientes azúcares y compuestos de sabor. Lo que llega a la taza son los ácidos sin contrapeso de dulzura."});
+  } else if(hasBitter&&hasDry){
+    sg.push({type:"dx",icon:"🔴",title:"Sobreextracción marcada",text:"Amargor con sequedad/astringencia: el agua disolvió taninos y compuestos no deseados. Los últimos solubles del café son amargos y astringentes — la extracción fue demasiado agresiva."});
+  } else if(hasBitter){
+    sg.push({type:"dx",icon:"🟠",title:"Sobreextracción ligera",text:"Amargor sin sequedad sugiere que estás en el límite de extracción. Los compuestos amargos empiezan a dominar pero el shot aún tiene estructura. Un ajuste pequeño debería corregirlo."});
+  } else if(hasDry){
+    sg.push({type:"dx",icon:"🟠",title:"Sobreextracción (sequedad)",text:"Astringencia/sequedad sin amargor fuerte: los taninos se están disolviendo. La extracción llegó demasiado lejos en uniformidad pero no en intensidad."});
+  } else if(hasFlat){
+    sg.push({type:"dx",icon:"⚪",title:"Shot plano",text:"Falta cuerpo y carácter. El café se extrajo pero sin concentración suficiente — los sabores están diluidos o la extracción no llegó a los compuestos que dan complejidad."});
+  } else if(neg.length===0&&pos.length===0){
+    sg.push({type:"dx",icon:"📝",title:"Sin evaluación sensorial",text:"Selecciona notas de sabor para obtener un diagnóstico y recomendaciones específicas."});
+  } else {
+    sg.push({type:"dx",icon:"📝",title:"Perfil mixto",text:`Notas detectadas pero sin un patrón claro de sub o sobreextracción. ${pos.length?"Positivo: "+pos.join(", ")+". ":""}${neg.length?"A corregir: "+neg.join(", ")+".":""}`});
+  }
+
+  /* ============================================
+     SECTION 2: POR QUÉ (if previous shot, explain causality)
+     ============================================ */
   const shots=bean?.shots||[];
   const idx=shots.findIndex(s=>s.id===shot.id);
   const prev=idx>0?shots[idx-1]:(shots.length>1?shots[shots.length-2]:null);
 
-  if(prev){
-    const changes=[];
+  if(prev&&(hasAcid||hasBitter||hasDry||hasFlat||hasBoth)){
     const dDoseIn=shot.doseIn-prev.doseIn;
     const dDoseOut=shot.doseOut-prev.doseOut;
     const dTemp=shot.temp-prev.temp;
     const dTime=shot.time-prev.time;
     const dGrind=(shot.grindSetting||0)-(prev.grindSetting||0);
     const dPI=(shot.preInfusion||0)-(prev.preInfusion||0);
-    const dRatio=(shot.doseOut/shot.doseIn)-(prev.doseOut/prev.doseIn);
+    const prevRatio=prev.doseIn>0?prev.doseOut/prev.doseIn:0;
 
-    if(Math.abs(dDoseIn)>=0.5) changes.push({param:"dosis de entrada",delta:dDoseIn,unit:"g",abs:Math.abs(dDoseIn)/0.5,dir:dDoseIn>0?"subiste":"bajaste",val:`${prev.doseIn}g → ${shot.doseIn}g`});
-    if(Math.abs(dDoseOut)>=1) changes.push({param:"yield (salida)",delta:dDoseOut,unit:"g",abs:Math.abs(dDoseOut)/1,dir:dDoseOut>0?"subiste":"bajaste",val:`${prev.doseOut}g → ${shot.doseOut}g`});
-    if(Math.abs(dTemp)>=0.5) changes.push({param:"temperatura",delta:dTemp,unit:"°C",abs:Math.abs(dTemp)/0.5,dir:dTemp>0?"subiste":"bajaste",val:`${prev.temp}°C → ${shot.temp}°C`});
-    if(Math.abs(dTime)>=2) changes.push({param:"tiempo de extracción",delta:dTime,unit:"s",abs:Math.abs(dTime)/2,dir:dTime>0?"subió":"bajó",val:`${prev.time}s → ${shot.time}s`});
-    if(Math.abs(dGrind)>=0.2) changes.push({param:"molienda (Mythos)",delta:dGrind,unit:"",abs:Math.abs(dGrind)/0.2,dir:dGrind>0?"abriste (más grueso)":"cerraste (más fino)",val:`${prev.grindSetting||0} → ${shot.grindSetting||0}`});
-    if(Math.abs(dPI)>=1) changes.push({param:"preinfusión",delta:dPI,unit:"s",abs:Math.abs(dPI)/1,dir:dPI>0?"aumentaste":"redujiste",val:`${prev.preInfusion||0}s → ${shot.preInfusion||0}s`});
+    const causes=[];
 
-    changes.sort((a,b)=>b.abs-a.abs);
-
-    if(changes.length>0){
-      const top=changes[0];
-      sg.push({icon:"🔄",text:`Cambio principal vs shot anterior: ${top.dir} ${top.param} (${top.val}).`,detail:true});
-
-      if(top.param==="dosis de entrada"){
-        if(top.delta>0&&hasAcid) sg.push({icon:"⚠️",text:`Subir la dosis de ${prev.doseIn}g a ${shot.doseIn}g (+${fmt(top.delta)}g) sin ajustar molienda aumenta la resistencia del puck. El agua no logra extraer uniformemente → acidez. Abre molienda para compensar el aumento de dosis, o vuelve a ${prev.doseIn}g y ajusta otra variable.`});
-        else if(top.delta>0&&hasBitter) sg.push({icon:"⚠️",text:`Más dosis (${prev.doseIn}g → ${shot.doseIn}g) con la misma molienda genera un puck más denso. Si el tiempo subió mucho, estás sobreextrayendo. Abre molienda proporcionalmente o reduce la dosis.`});
-        else if(top.delta>0&&hasBoth) sg.push({icon:"⚠️",text:`El salto de ${prev.doseIn}g a ${shot.doseIn}g es significativo. Un puck mucho más denso con la misma molienda genera canalización: acidez y amargor al mismo tiempo. Vuelve a la dosis anterior o recalibra molienda desde cero.`});
-        else if(top.delta<0&&hasFlat) sg.push({icon:"💡",text:`Reducir la dosis de ${prev.doseIn}g a ${shot.doseIn}g puede generar un shot acuoso si el yield se mantuvo igual. El ratio subió a 1:${fmt(shot.doseOut/shot.doseIn)}. Baja el yield proporcionalmente o sube la dosis.`});
-        else if(top.delta>0) sg.push({icon:"📝",text:`Subiste la dosis ${fmt(top.delta)}g. Recuerda que cambios mayores a 1g en dosis requieren recalibrar molienda — no es solo más café, es un puck completamente diferente.`});
-        else sg.push({icon:"📝",text:`Bajaste la dosis ${fmt(Math.abs(top.delta))}g. Ajusta yield y molienda proporcionalmente para mantener el perfil.`});
-      }
-      else if(top.param==="temperatura"){
-        if(top.delta>0&&hasBitter) sg.push({icon:"🌡️",text:`Subir de ${prev.temp}°C a ${shot.temp}°C probablemente empujó a sobreextracción. Regresa a ${prev.temp}°C o baja 0.5°C desde ahí. La temperatura es la variable más agresiva — mueve de medio grado en medio grado.`});
-        else if(top.delta<0&&hasAcid) sg.push({icon:"🌡️",text:`Bajar de ${prev.temp}°C a ${shot.temp}°C redujo la capacidad de extracción. El café no desarrolla bien sus azúcares a esta temperatura. Sube de vuelta a ${prev.temp}°C.`});
-        else if(top.delta>0&&hasAcid) sg.push({icon:"🌡️",text:`Subiste temp pero sigue ácido. El problema probablemente no es temperatura sino molienda o distribución. Revisa puck prep antes de seguir subiendo — a ${shot.temp}°C ya deberías tener suficiente extracción.`});
-        else sg.push({icon:"📝",text:`Ajuste de temperatura (${top.val}). Si mejoró, documenta. Si no, revisa si el cambio significativo no es otro parámetro que también moviste.`});
-      }
-      else if(top.param==="molienda (Mythos)"){
-        if(top.delta<0&&hasBitter) sg.push({icon:"⚙️",text:`Cerraste molienda (${top.val}) y apareció amargor. El puck está demasiado fino — el agua sobreextrae. Regresa al punto anterior (${prev.grindSetting}) o abre un poco más (+0.2).`});
-        else if(top.delta>0&&hasAcid) sg.push({icon:"⚙️",text:`Abriste molienda (${top.val}) y apareció acidez. Fuiste demasiado lejos — el agua pasa rápido sin extraer bien. Cierra ligeramente (-0.2 desde ${shot.grindSetting}).`});
-        else sg.push({icon:"📝",text:`Ajuste de molienda (${top.val}). El Mythos es sensible — cambios de 0.2-0.3 son suficientes para notar diferencia.`});
-      }
-      else if(top.param==="preinfusión"){
-        sg.push({icon:"💧",text:`Cambiaste preinfusión (${top.val}). La preinfusión mejora uniformidad de extracción pero no compensa problemas de dosis, molienda o temperatura. Si cambiaste otros parámetros al mismo tiempo, enfócate primero en esos.`});
-      }
-      else if(top.param==="yield (salida)"){
-        if(top.delta>0&&hasBitter) sg.push({icon:"📐",text:`Más yield (${top.val}) puede sobreextraer al final del shot. Los últimos mililitros traen compuestos amargos. Reduce a ${prev.doseOut}g o busca el punto medio.`});
-        else if(top.delta<0&&hasAcid) sg.push({icon:"📐",text:`Menos yield (${top.val}) = menos extracción total. Los azúcares no se disolvieron completamente. Sube de vuelta a ${prev.doseOut}g.`});
-        else sg.push({icon:"📝",text:`Ajuste de yield (${top.val}). Ratio actual: 1:${fmt(shot.doseOut/shot.doseIn)}.`});
-      }
-
-      if(changes.length>1){
-        const others=changes.slice(1).map(c=>`${c.param} (${c.val})`).join(", ");
-        sg.push({icon:"📋",text:`También cambiaste: ${others}. Para aislar qué causó el resultado, cambia solo una variable a la vez.`});
-      }
+    /* Analyze each change in context of the diagnosis */
+    if(hasBoth){
+      if(Math.abs(dDoseIn)>=1) causes.push(`Cambio de dosis (${prev.doseIn}→${shot.doseIn}g) sin recalibrar molienda genera un puck con densidad diferente — causa directa de canalización.`);
+      if(dPI<=-1) causes.push(`Reducir preinfusión (${prev.preInfusion}→${shot.preInfusion}s) disminuye la saturación del puck antes de la presión completa, favoreciendo canalización.`);
+      if(Math.abs(dGrind)>=0.5) causes.push(`Cambio grande de molienda (${prev.grindSetting}→${shot.grindSetting}) puede haber generado un flujo desparejo.`);
     }
+    else if(hasAcid){
+      if(dTemp<0) causes.push(`Bajar temperatura (${prev.temp}→${shot.temp}°C) reduce la energía disponible para extraer azúcares.`);
+      if(dGrind>0.2) causes.push(`Abrir molienda (${prev.grindSetting}→${shot.grindSetting}) permite que el agua pase más rápido, extrayendo menos.`);
+      if(dTime<=-3) causes.push(`Tiempo más corto (${prev.time}→${shot.time}s) significa menos contacto agua-café, menos extracción.`);
+      if(dDoseIn>=1&&Math.abs(dGrind)<0.2) causes.push(`Subir dosis (${prev.doseIn}→${shot.doseIn}g) sin abrir molienda crea un puck más resistente que el agua no penetra bien.`);
+      if(dPI<=-1) causes.push(`Reducir preinfusión (${prev.preInfusion}→${shot.preInfusion}s) puede causar extracción despareja si el puck no se satura antes de la presión completa.`);
+      if(dDoseOut<-2) causes.push(`Menos yield (${prev.doseOut}→${shot.doseOut}g) = menos extracción total.`);
+    }
+    else if(hasBitter||hasDry){
+      if(dTemp>0) causes.push(`Subir temperatura (${prev.temp}→${shot.temp}°C) aumenta la extracción — a ${shot.temp}°C se empiezan a disolver compuestos amargos.`);
+      if(dGrind<-0.2) causes.push(`Cerrar molienda (${prev.grindSetting}→${shot.grindSetting}) aumenta el tiempo de contacto y la presión, extrayendo de más.`);
+      if(dTime>=3) causes.push(`Tiempo más largo (${prev.time}→${shot.time}s) = más contacto, más extracción de compuestos no deseados.`);
+      if(dDoseOut>2) causes.push(`Más yield (${prev.doseOut}→${shot.doseOut}g) arrastra compuestos amargos del final de la extracción.`);
+      if(dPI<=-1&&shot.time<28) causes.push(`Reducir preinfusión (${prev.preInfusion}→${shot.preInfusion}s) con tiempo corto (${shot.time}s) sugiere canalización localizada — el agua sobreextrae en las zonas donde pasa fácil.`);
+      if(dDoseIn<=-0.5&&Math.abs(dGrind)<0.2) causes.push(`Menos dosis (${prev.doseIn}→${shot.doseIn}g) sin ajustar molienda hace el puck menos resistente — el agua pasa más lento de lo esperado concentrando la extracción.`);
+    }
+    else if(hasFlat){
+      if(dDoseOut>2) causes.push(`Más yield (${prev.doseOut}→${shot.doseOut}g) diluye los solubles. Ratio actual: 1:${fmt(ratio)}.`);
+      if(dDoseIn<-0.5) causes.push(`Menos dosis (${prev.doseIn}→${shot.doseIn}g) = menos café para extraer, shot más débil.`);
+      if(dGrind>0.3) causes.push(`Molienda más abierta (${prev.grindSetting}→${shot.grindSetting}) = extracción rápida y superficial.`);
+    }
+
+    if(causes.length>0){
+      sg.push({type:"why",icon:"🔍",title:"Probable causa",text:causes.join(" ")});
+    }
+
+    /* Note other changes that weren't diagnosed */
+    const allChanges=[];
+    if(Math.abs(dDoseIn)>=0.5) allChanges.push(`dosis ${prev.doseIn}→${shot.doseIn}g`);
+    if(Math.abs(dDoseOut)>=1) allChanges.push(`yield ${prev.doseOut}→${shot.doseOut}g`);
+    if(Math.abs(dTemp)>=0.5) allChanges.push(`temp ${prev.temp}→${shot.temp}°C`);
+    if(Math.abs(dTime)>=2) allChanges.push(`tiempo ${prev.time}→${shot.time}s`);
+    if(Math.abs(dGrind)>=0.2) allChanges.push(`molienda ${prev.grindSetting||0}→${shot.grindSetting||0}`);
+    if(Math.abs(dPI)>=1) allChanges.push(`PI ${prev.preInfusion||0}→${shot.preInfusion||0}s`);
+    if(allChanges.length>1) sg.push({type:"why",icon:"📋",title:"Variables modificadas",text:`Cambiaste ${allChanges.length} variables: ${allChanges.join(", ")}. Para aislar la causa, modifica solo una a la vez.`});
   }
 
-  /* --- GENERIC FLAVOR-BASED (when no previous shot or no changes) --- */
-  if(sg.length===0){
-    if(hasBoth){
-      sg.push({icon:"⚠️",text:"Acidez + amargor simultáneos = extracción despareja (canalización). El agua encuentra caminos fáciles en el puck: unas zonas se sobreextraen (amargor) mientras otras quedan subextraídas (acidez agria)."});
-      sg.push({icon:"🔧",text:"Revisa tu puck prep: distribución con WDT, tamp nivelado con spring tamper. Si ya lo haces, alarga preinfusión a 4-5s con 3-4s de pausa para saturar el puck antes de la presión completa."});
-    }else if(hasAcid){
-      sg.push({icon:"🌡️",text:`Subextracción: el agua no está sacando suficientes solubles. Los azúcares quedan en el puck y la taza muestra solo ácidos sin contrapeso.`});
-      if(shot.temp<93) sg.push({icon:"🔥",text:`Temperatura: sube 1°C (a ${shot.temp+1}°C). Es el ajuste con mayor impacto. Más temperatura = más energía para disolver azúcares.`});
-      if(shot.time<28) sg.push({icon:"⚙️",text:`Tiempo muy corto (${shot.time}s). Aprieta molienda en el Mythos (-0.3 a -0.5) para llegar a 28-32s.`});
-      if(shot.doseOut/shot.doseIn<1.9) sg.push({icon:"📐",text:`Ratio bajo (1:${fmt(shot.doseOut/shot.doseIn)}). Sube yield a ~${fmt(shot.doseIn*2)}g para ratio 1:2.`});
-    }else if(hasBitter||hasDry){
-      sg.push({icon:"🌡️",text:`Sobreextracción: estás sacando compuestos indeseables del café. ${hasDry?"La astringencia/sequedad indica que los taninos se están disolviendo.":"El amargor viene de compuestos que se extraen al final."}`});
-      if(shot.temp>92) sg.push({icon:"❄️",text:`Baja temperatura 1°C (a ${shot.temp-1}°C). Menos energía = menos extracción de compuestos amargos.`});
-      if(shot.time>32) sg.push({icon:"⚙️",text:`Tiempo largo (${shot.time}s). Abre molienda en el Mythos (+0.3) para bajar a 28-32s.`});
-    }else if(hasFlat){
-      sg.push({icon:"💧",text:"Shot plano/acuoso: falta cuerpo y carácter. El café tiene los solubles pero están muy diluidos o la extracción no llegó a los compuestos de sabor."});
-      sg.push({icon:"⚙️",text:`Aprieta molienda ligeramente (Mythos: -0.2 a -0.3). También puedes reducir yield 1-2g para concentrar.`});
-    }
-    if(pos.includes("Balanceado")&&pos.includes("Dulce")){
-      sg.push({icon:"✅",text:`¡Receta lograda! Documenta: ${shot.doseIn}g → ${shot.doseOut}g, ${shot.temp}°C, ${shot.time}s${shot.grindSetting?", M:"+shot.grindSetting:""}${shot.preInfusion?", PI:"+shot.preInfusion+"/"+shot.preInfusionPause+"s":""}. Replica exactamente en los siguientes shots.`});
-    }
-    if(sg.length===0) sg.push({icon:"📝",text:"Sin problemas claros detectados. Si buscas mejorar, cambia una sola variable a la vez y compara con este shot como referencia."});
+  /* ============================================
+     SECTION 3: QUÉ HACER (specific next actions)
+     ============================================ */
+  if(isGood&&!hasAcid&&!hasBitter&&!hasDry) return sg;
+
+  const actions=[];
+  if(hasBoth){
+    actions.push("Revisa puck prep: WDT + tamp nivelado con spring tamper.");
+    if(!shot.preInfusion||shot.preInfusion<4) actions.push(`Sube preinfusión a 4-5s con 3-4s de pausa (tienes ${shot.preInfusion||0}s).`);
+    else actions.push("Si puck prep y preinfusión ya están bien, puede ser que el café necesite reposo o que la molienda esté en una zona inestable del Mythos. Mueve ±0.3 y prueba.");
+  }
+  else if(hasAcid){
+    if(shot.temp<93) actions.push(`Sube temperatura a ${Math.min(shot.temp+1,96)}°C. Es el ajuste de mayor impacto para subextracción.`);
+    if(shot.time<28) actions.push(`Cierra molienda (Mythos: -0.3) para llegar a 28-32s. Tienes ${shot.time}s.`);
+    else if(shot.time>=28&&shot.time<=32&&shot.temp>=93) actions.push("Temp y tiempo en rango — prueba aumentar preinfusión a 4-5s para mejorar uniformidad.");
+    if(ratio<1.9) actions.push(`Sube yield a ${fmt(shot.doseIn*2)}g (ratio 1:2). Tienes 1:${fmt(ratio)}.`);
+    if(prev&&(prev.preInfusion||0)>(shot.preInfusion||0)) actions.push(`Regresa preinfusión a ${prev.preInfusion}s — la tenías mejor antes.`);
+  }
+  else if(hasBitter||hasDry){
+    if(shot.temp>91) actions.push(`Baja temperatura a ${shot.temp-1}°C.`);
+    if(shot.time>32) actions.push(`Abre molienda (Mythos: +0.3) para bajar de ${shot.time}s a 28-32s.`);
+    else if(shot.time<28&&(shot.preInfusion||0)<3) actions.push(`Tiempo corto (${shot.time}s) con sobreextracción sugiere canalización. Sube preinfusión a 4s con 3s pausa.`);
+    else if(shot.time>=28&&shot.time<=32&&shot.temp<=92) actions.push(`Parámetros en rango — prueba abrir molienda +0.2 en el Mythos para reducir presión sobre el puck.`);
+    if(ratio>2.1) actions.push(`Reduce yield a ${fmt(shot.doseIn*2)}g. Ratio alto (1:${fmt(ratio)}) arrastra compuestos amargos.`);
+    if(prev&&(prev.preInfusion||0)>(shot.preInfusion||0)) actions.push(`Regresa preinfusión a ${prev.preInfusion}s — reducirla pudo causar extracción despareja.`);
+  }
+  else if(hasFlat){
+    actions.push(`Cierra molienda (Mythos: -0.2) para más cuerpo.`);
+    if(ratio>2) actions.push(`Reduce yield 2-3g para concentrar. Ratio actual: 1:${fmt(ratio)}.`);
+  }
+
+  if(actions.length>0){
+    sg.push({type:"action",icon:"→",title:"Siguiente paso",text:actions[0]});
+    if(actions.length>1) actions.slice(1).forEach(a=>sg.push({type:"action",icon:"→",title:"",text:a}));
   }
 
   return sg;
@@ -193,7 +230,7 @@ const Ic=({name,sz=20,c=B.beige})=>{
 
 const Hdr=({title,sub,onBack,right})=>(
   <div style={st.header}>
-    {onBack?<button onClick={onBack} style={{background:"none",border:"none",cursor:"pointer",padding:0}}><Ic name="back"/></button>:<img src={LOGO} alt="LOU" style={{height:28}}/>}
+    {onBack?<button onClick={onBack} style={{background:"none",border:"none",cursor:"pointer",padding:0}}><Ic name="back"/></button>:<img src={LOGO} alt="LOU" style={{height:28,mixBlendMode:"lighten"}}/>}
     <div style={{textAlign:"center",flex:1}}>
       <div style={{...st.mon,fontSize:16}}>{title}</div>
       {sub&&<div style={{fontSize:10,color:B.gris,letterSpacing:1.5,marginTop:2}}>{sub}</div>}
@@ -245,7 +282,7 @@ function App(){
   const deleteShot=(bid,sid)=>{const nb=beans.map(b=>b.id===bid?{...b,shots:b.shots.filter(sh=>sh.id!==sid)}:b);save(nb);setSelBean(nb.find(b=>b.id===bid));};
   const updateShot=(bid,updated)=>{const nb=beans.map(b=>b.id===bid?{...b,shots:b.shots.map(sh=>sh.id===updated.id?{...updated,timestamp:sh.timestamp}:sh)}:b);save(nb);setSelBean(nb.find(b=>b.id===bid));setEditShot(null);setScreen("beanDetail");};
   const startEdit=(bean,shot)=>{setSelBean(bean);setEditShot(shot);setScreen("editShot");};
-  if(!loaded)return<div style={{...st.app,display:"flex",alignItems:"center",justifyContent:"center"}}><img src={EMB} alt="" style={{width:48,opacity:.3,animation:"pulse 1.5s infinite"}}/></div>;
+  if(!loaded)return<div style={{...st.app,display:"flex",alignItems:"center",justifyContent:"center"}}><img src={EMB} alt="" style={{width:48,opacity:.3,animation:"pulse 1.5s infinite",mixBlendMode:"lighten"}}/></div>;
   return(
     <div style={st.app}>
       {screen==="home"&&<Home beans={beans} nav={nav}/>}
@@ -257,7 +294,7 @@ function App(){
       {screen==="report"&&selBean&&<Report bean={selBean} onBack={()=>nav("beanDetail",selBean)}/>}
       {screen==="archive"&&<Archive beans={beans} nav={nav}/>}
       <nav style={st.nav}>
-        <button style={st.navItem} onClick={()=>setScreen("home")}><img src={EMB} alt="" style={{height:22,opacity:screen==="home"?1:.4,filter:screen==="home"?"none":"grayscale(1)"}}/><span style={{...st.navLab,color:screen==="home"?B.rojo:B.gris}}>Granos</span></button>
+        <button style={st.navItem} onClick={()=>setScreen("home")}><img src={EMB} alt="" style={{height:22,mixBlendMode:"lighten",opacity:screen==="home"?1:.4,filter:screen==="home"?"none":"grayscale(1)"}}/><span style={{...st.navLab,color:screen==="home"?B.rojo:B.gris}}>Granos</span></button>
         <button style={st.navItem} onClick={()=>setScreen("addBean")}><div style={{background:B.rojo,borderRadius:"50%",width:46,height:46,display:"flex",alignItems:"center",justifyContent:"center",marginTop:-16}}><Ic name="plus" sz={22} c="#fff"/></div></button>
         <button style={st.navItem} onClick={()=>setScreen("archive")}><Ic name="archive" sz={22} c={screen==="archive"?B.rojo:B.gris}/><span style={{...st.navLab,color:screen==="archive"?B.rojo:B.gris}}>Archivo</span></button>
       </nav>
@@ -271,7 +308,7 @@ function Home({beans,nav}){
     <Hdr title="LOU" sub="Brew Calibration"/>
     <div style={st.body}>
       <div style={{padding:"16px 0 10px"}}><span style={{...st.label,fontSize:11}}>Granos activos ({active.length})</span></div>
-      {!active.length?<div style={st.empty}><img src={EMB} alt="" style={{width:48,opacity:.2}}/><p style={{marginTop:16,fontSize:13}}>No hay granos activos</p><p style={{fontSize:11,color:B.gris}}>Agrega un grano para calibrar</p></div>
+      {!active.length?<div style={st.empty}><img src={EMB} alt="" style={{width:48,opacity:.2,mixBlendMode:"lighten"}}/><p style={{marginTop:16,fontSize:13}}>No hay granos activos</p><p style={{fontSize:11,color:B.gris}}>Agrega un grano para calibrar</p></div>
       :active.map(b=>(
         <div key={b.id} style={st.card} onClick={()=>nav("beanDetail",b)}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
@@ -426,9 +463,17 @@ function LogShot({bean,onSave,onBack,editShot}){
 function ShotResult({bean,shot,onBack}){
   const suggestions=getSuggestions(shot,bean);
   return(<><Hdr title="Calibración" onBack={onBack}/><div style={st.body}>
-    <div style={{paddingTop:16,textAlign:"center"}}><img src={EMB} alt="" style={{width:32,opacity:.5}}/><div style={{...st.mon,fontSize:14,marginTop:8}}>Shot registrado</div><div style={{fontSize:14,marginTop:6}}>{shot.doseIn}g×{shot.doseOut}g·{shot.temp}°C·{shot.time}s{shot.grindSetting>0?` M:${shot.grindSetting}`:""}</div></div>
+    <div style={{paddingTop:16,textAlign:"center"}}><img src={EMB} alt="" style={{width:32,opacity:.5,mixBlendMode:"lighten"}}/><div style={{...st.mon,fontSize:14,marginTop:8}}>Shot registrado</div><div style={{fontSize:14,marginTop:6}}>{shot.doseIn}g×{shot.doseOut}g·{shot.temp}°C·{shot.time}s{shot.grindSetting>0?` M:${shot.grindSetting}`:""}</div></div>
     <div style={st.divider}/><span style={{...st.label,fontSize:11,color:B.rojo}}>Sugerencias</span>
-    <div style={{marginTop:6}}>{suggestions.map((sg,i)=>(<div key={i} style={{...st.sug,flexDirection:sg.detail?"column":"row"}}>{sg.detail?<div style={{fontSize:13,fontWeight:600,color:B.beige,padding:"4px 0",borderLeft:`3px solid ${B.rojo}`,paddingLeft:12}}>{sg.text}</div>:<><span style={{fontSize:18,flexShrink:0}}>{sg.icon}</span><span style={{fontSize:13,lineHeight:1.6}}>{sg.text}</span></>}</div>))}</div>
+    <div style={{marginTop:6}}>{suggestions.map((sg,i)=>{
+const colors={dx:B.rojo,why:B.gris,action:"#5DCAA5",success:"#EF9F27"};
+const borderC=colors[sg.type]||B.olivo;
+return(<div key={i} style={{padding:"12px 0",borderBottom:`1px solid ${B.olivo}`}}>
+{sg.title&&<div style={{fontSize:10,color:borderC,textTransform:"uppercase",letterSpacing:2,marginBottom:6,fontFamily:"'Oswald',sans-serif",fontWeight:800}}>{sg.title}</div>}
+<div style={{display:"flex",gap:10,alignItems:"flex-start"}}>
+{sg.type==="action"?<span style={{color:"#5DCAA5",fontWeight:800,fontSize:14,marginTop:1}}>→</span>:<span style={{fontSize:16,flexShrink:0}}>{sg.icon}</span>}
+<span style={{fontSize:13,lineHeight:1.6,color:sg.type==="action"?B.beige:B.beigeDark}}>{sg.text}</span>
+</div></div>);})}</div>
     <button style={{...st.btn,marginTop:24}} onClick={onBack}>Volver al Grano</button>
   </div></>);
 }
@@ -546,7 +591,7 @@ function Report({bean,onBack}){
   return(<>
     <Hdr title="Reporte" onBack={onBack} right={<button onClick={shareReport} style={{background:"none",border:"none",cursor:"pointer",padding:0}}><Ic name="share"/></button>}/>
     <div style={st.body}>
-      <div style={{textAlign:"center",paddingTop:20}}><img src={LOGO} alt="LOU" style={{height:32,opacity:.7}}/><div style={{...st.mon,fontSize:20,marginTop:10}}>Reporte de Lote</div><div style={{fontSize:11,color:B.gris,marginTop:4,letterSpacing:2}}>{bean.customName||bean.variety}</div>{bean.producer&&<div style={{fontSize:10,color:B.gris,marginTop:2}}>{bean.producer}</div>}</div>
+      <div style={{textAlign:"center",paddingTop:20}}><img src={LOGO} alt="LOU" style={{height:32,mixBlendMode:"lighten"}}/><div style={{...st.mon,fontSize:20,marginTop:10}}>Reporte de Lote</div><div style={{fontSize:11,color:B.gris,marginTop:4,letterSpacing:2}}>{bean.customName||bean.variety}</div>{bean.producer&&<div style={{fontSize:10,color:B.gris,marginTop:2}}>{bean.producer}</div>}</div>
       <div style={{...st.card,background:B.olivo,borderColor:"transparent",marginTop:14}}>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
           <div><span style={{fontSize:10,color:B.gris}}>Tueste</span><div style={{fontSize:13,fontWeight:600}}>{bean.roastType}</div></div>
